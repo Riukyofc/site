@@ -5,15 +5,32 @@ import logoImg from '../../assets/logo.png';
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+      const totalScroll = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const currentScroll = window.scrollY;
+      if (totalScroll > 0) {
+        setScrollProgress((currentScroll / totalScroll) * 100);
+      } else {
+        setScrollProgress(0);
+      }
+    };
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <nav className={`fixed w-full top-0 left-0 z-50 transition-all duration-500 ${scrolled ? 'glass-nav py-3 md:py-4 shadow-lg' : 'bg-transparent py-5 md:py-6'}`}>
+      {/* Scroll Progress Bar Premium */}
+      <div className="absolute top-0 left-0 w-full h-[2px] sm:h-[3px] bg-white/5 z-50">
+        <div 
+          className="h-full bg-gradient-to-r from-[#00BFFF] via-[#8B5CF6] to-[#FF1493] transition-all duration-150 ease-out shadow-[0_0_8px_#FF1493]"
+          style={{ width: `${scrollProgress}%` }}
+        ></div>
+      </div>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 flex justify-between items-center">
         
         {/* Logo de Elite via Imagem Oficial */}

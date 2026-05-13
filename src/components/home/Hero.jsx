@@ -39,14 +39,14 @@ export const Hero = () => {
           <FadeIn delay={700} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-5 pt-4 sm:pt-6 w-full sm:w-auto justify-center px-4 sm:px-0">
             <a 
               href="#trabalhos" 
-              className="group flex items-center justify-center gap-3 px-8 py-3.5 sm:py-4 rounded-full font-bold text-sm sm:text-base transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl bg-gradient-to-r from-[#00BFFF] via-[#8B5CF6] to-[#FF1493] text-white hover:shadow-[#FF1493]/20 text-center"
+              className="group flex items-center justify-center gap-3 px-8 py-3.5 sm:py-4 rounded-full font-bold text-sm sm:text-base transition-all duration-300 hover:scale-105 active:scale-95 shadow-lg hover:shadow-[0_0_25px_rgba(255,20,147,0.4)] bg-gradient-to-r from-[#00BFFF] via-[#8B5CF6] to-[#FF1493] text-white text-center border border-white/10"
             >
               Explorar Portfólio
               <ArrowRight size={18} className="group-hover:translate-x-1.5 transition-transform" />
             </a>
             <a 
               href="#servicos" 
-              className="px-8 py-3.5 sm:py-4 rounded-full font-bold text-sm sm:text-base border border-white/20 text-white hover:bg-white/10 transition-all duration-300 hover:scale-105 text-center"
+              className="px-8 py-3.5 sm:py-4 rounded-full font-bold text-sm sm:text-base border border-white/15 bg-white/[0.02] backdrop-blur-sm text-white hover:border-[#00BFFF]/60 hover:text-[#00BFFF] hover:bg-white/[0.05] hover:shadow-[0_0_20px_rgba(0,191,255,0.2)] transition-all duration-300 hover:scale-105 text-center"
             >
               Nossa Especialidade
             </a>
