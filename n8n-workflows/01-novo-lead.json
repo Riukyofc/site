@@ -1,0 +1,81 @@
+{
+  "name": "🔔 RKY Studio — Novo Lead → WhatsApp",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "novo-lead",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-lead",
+      "name": "Webhook Lead",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const { name, email, message, _timestamp } = $input.first().json;\n\nconst msgParaVoce = `🔥 *NOVO LEAD — RKY Studio*\\n\\n` +\n  `👤 *Nome:* ${name}\\n` +\n  `📧 *Email:* ${email}\\n` +\n  `💬 *Mensagem:* ${message}\\n` +\n  `🕐 *Data:* ${new Date(_timestamp).toLocaleString('pt-BR')}`;\n\nconst msgParaCliente = `Olá *${name}*! 👋\\n\\n` +\n  `Recebemos sua solicitação no *RKY Studio*.\\n\\n` +\n  `Nossa equipe vai analisar seu projeto e entrar em contato em até *24 horas*.\\n\\n` +\n  `Enquanto isso, confira nosso portfólio: https://rkystudio.com/#portfolio\\n\\n` +\n  `_Equipe RKY Studio_ ✨`;\n\nreturn [{ json: { msgParaVoce, msgParaCliente, name, email } }];"
+      },
+      "id": "code-format-lead",
+      "name": "Formatar Mensagem",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendText",
+        "instanceName": "rky-studio",
+        "remoteJid": "5598982715727@s.whatsapp.net",
+        "message": "={{ $json.msgParaVoce }}"
+      },
+      "id": "evo-send-owner",
+      "name": "WhatsApp → Você",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [720, 220],
+      "credentials": {
+        "evolutionApi": {
+          "id": "1",
+          "name": "Evolution API RKY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"success\": true, \"message\": \"Lead recebido com sucesso\"}"
+      },
+      "id": "respond-ok",
+      "name": "Responder OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [720, 400]
+    }
+  ],
+  "connections": {
+    "Webhook Lead": {
+      "main": [
+        [
+          { "node": "Formatar Mensagem", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Formatar Mensagem": {
+      "main": [
+        [
+          { "node": "WhatsApp → Você", "type": "main", "index": 0 },
+          { "node": "Responder OK", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo"
+  },
+  "tags": [{ "name": "RKY Studio" }]
+}

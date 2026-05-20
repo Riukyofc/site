@@ -1,10 +1,60 @@
-import React from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FadeIn } from '../layout/FadeIn';
+
+const AnimatedCounter = ({ end, prefix = '', suffix = '', duration = 2000 }) => {
+  const [count, setCount] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const nodeRef = useRef(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (nodeRef.current) {
+      observer.observe(nodeRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, [hasAnimated]);
+
+  useEffect(() => {
+    if (!hasAnimated) return;
+
+    let startTime = null;
+
+    const animate = (currentTime) => {
+      if (!startTime) startTime = currentTime;
+      const progress = currentTime - startTime;
+      
+      if (progress < duration) {
+        // Efeito ease-out-quart para uma animação premium
+        const easeOutQuart = 1 - Math.pow(1 - progress / duration, 4);
+        setCount(Math.floor(end * easeOutQuart));
+        requestAnimationFrame(animate);
+      } else {
+        setCount(end);
+      }
+    };
+
+    requestAnimationFrame(animate);
+  }, [end, duration, hasAnimated]);
+
+  return <span ref={nodeRef}>{prefix}{count}{suffix}</span>;
+};
 
 export const Stats = () => {
   const stats = [
     {
-      value: "+50",
+      isCounter: true,
+      end: 50,
+      prefix: "+",
+      suffix: "",
       label: "Projetos Entregues",
       desc: "Com excelência e impacto digital global",
       accent: "text-[#00BFFF]",
@@ -12,7 +62,10 @@ export const Stats = () => {
       glow: "group-hover:shadow-[0_0_30px_rgba(0,191,255,0.2)]"
     },
     {
-      value: "99%",
+      isCounter: true,
+      end: 99,
+      prefix: "",
+      suffix: "%",
       label: "Satisfação",
       desc: "Parcerias estratégicas e duradouras",
       accent: "text-[#FF1493]",
@@ -20,7 +73,10 @@ export const Stats = () => {
       glow: "group-hover:shadow-[0_0_30px_rgba(255,20,147,0.2)]"
     },
     {
-      value: "100%",
+      isCounter: true,
+      end: 100,
+      prefix: "",
+      suffix: "%",
       label: "Otimização Extrema",
       desc: "Performance máxima e SEO impecável",
       accent: "text-[#8B5CF6]",
@@ -28,6 +84,7 @@ export const Stats = () => {
       glow: "group-hover:shadow-[0_0_30px_rgba(139,92,246,0.2)]"
     },
     {
+      isCounter: false,
       value: "Pixel",
       label: "Perfect UI/UX",
       desc: "Precisão milimétrica em cada layout",
@@ -48,8 +105,12 @@ export const Stats = () => {
                 <div className="absolute top-0 left-1/4 right-1/4 h-[2px] bg-gradient-to-r from-transparent via-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
 
                 <div className="flex flex-col items-start">
-                  <span className={`text-4xl sm:text-5xl font-black tracking-tighter mb-2 ${stat.accent} transition-transform duration-500 group-hover:scale-105 origin-left`}>
-                    {stat.value}
+                  <span className={`text-4xl sm:text-5xl font-black tracking-tighter mb-2 ${stat.accent} transition-transform duration-500 group-hover:scale-105 origin-left inline-block`}>
+                    {stat.isCounter ? (
+                      <AnimatedCounter end={stat.end} prefix={stat.prefix} suffix={stat.suffix} />
+                    ) : (
+                      stat.value
+                    )}
                   </span>
                   <h5 className="text-base sm:text-lg font-bold text-white mb-1 tracking-tight">
                     {stat.label}

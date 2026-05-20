@@ -1,5 +1,5 @@
 import React from 'react';
-import logoImg from '../../assets/logo.png';
+import { Logo } from './Logo';
 
 // Custom inline elite SVGs to guarantee build success and avoid missing esm exports for brand icons
 const InstagramIcon = () => (
@@ -38,15 +38,11 @@ export const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-8 mb-12 sm:mb-16">
           
           <div className="text-center md:text-left flex flex-col items-center md:items-start">
-            {/* Logo de Elite via Imagem Oficial */}
+            {/* Logo de Elite Baseada em Texto */}
             <a href="#home" className="flex items-center justify-center mb-6 group transition-transform hover:scale-105 duration-300">
-              <img 
-                src={logoImg} 
-                alt="RKY Studio Logo" 
-                className="h-12 sm:h-14 w-auto object-contain drop-shadow-[0_4px_12px_rgba(255,20,147,0.15)]" 
-              />
+              <Logo className="text-[24px] sm:text-[32px]" />
             </a>
-            <p className="max-w-sm font-medium text-white text-xs sm:text-sm leading-relaxed px-2 sm:px-0">
+            <p className="max-w-sm font-medium text-white text-xs sm:text-sm leading-relaxed px-2 sm:px-0 mt-4">
               Engenharia de software de ponta e estética digital de elite. Projetado com excelência e precisão milimétrica.
             </p>
           </div>

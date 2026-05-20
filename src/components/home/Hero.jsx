@@ -1,10 +1,140 @@
-import React from 'react';
+import React, { useState, useEffect, useRef, memo } from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import { FadeIn } from '../layout/FadeIn';
 
+const ParticleCanvas = memo(() => {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    let animationFrameId;
+    let particles = [];
+    
+    const resize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = Math.random() * 0.5 - 0.25;
+        this.speedY = Math.random() * 0.5 - 0.25;
+        this.opacity = Math.random() * 0.5 + 0.1;
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x > canvas.width) this.x = 0;
+        if (this.x < 0) this.x = canvas.width;
+        if (this.y > canvas.height) this.y = 0;
+        if (this.y < 0) this.y = canvas.height;
+      }
+      draw() {
+        ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    const init = () => {
+      resize();
+      particles = [];
+      const numParticles = window.innerWidth < 768 ? 30 : 80;
+      for (let i = 0; i < numParticles; i++) {
+        particles.push(new Particle());
+      }
+    };
+
+    const animate = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      for (let i = 0; i < particles.length; i++) {
+        particles[i].update();
+        particles[i].draw();
+      }
+      
+      // Conecta partículas próximas para efeito constelação (Premium UI)
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const distanceSq = dx * dx + dy * dy;
+          
+          if (distanceSq < 14400) { // 120 * 120
+            ctx.beginPath();
+            ctx.strokeStyle = `rgba(255, 255, 255, ${0.1 - distanceSq/144000})`; // Adjust opacity based on sq distance
+            ctx.lineWidth = 0.5;
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+      
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
+    window.addEventListener('resize', init);
+    init();
+    animate();
+
+    return () => {
+      window.removeEventListener('resize', init);
+      cancelAnimationFrame(animationFrameId);
+    };
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none opacity-60" />;
+});
+
+const Typewriter = memo(({ words, delay = 100, pause = 2500 }) => {
+  const [currentWordIndex, setCurrentWordIndex] = useState(0);
+  const [currentText, setCurrentText] = useState('');
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const word = words[currentWordIndex];
+    let timer;
+
+    if (isDeleting) {
+      timer = setTimeout(() => {
+        setCurrentText(word.substring(0, currentText.length - 1));
+      }, delay / 2);
+    } else {
+      timer = setTimeout(() => {
+        setCurrentText(word.substring(0, currentText.length + 1));
+      }, delay);
+    }
+
+    if (!isDeleting && currentText === word) {
+      timer = setTimeout(() => setIsDeleting(true), pause);
+    } else if (isDeleting && currentText === '') {
+      setIsDeleting(false);
+      setCurrentWordIndex((prev) => (prev + 1) % words.length);
+    }
+
+    return () => clearTimeout(timer);
+  }, [currentText, isDeleting, currentWordIndex, words, delay, pause]);
+
+  return (
+    <span className="inline-block text-left min-w-[7ch]">
+      {currentText}
+      <span className="animate-pulse ml-1 text-white/70 font-light">|</span>
+    </span>
+  );
+});
+
 export const Hero = () => {
   return (
-    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 sm:pt-20 pb-10 sm:pb-12">
+    <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16 sm:pt-20 pb-10 sm:pb-12 bg-transparent">
+      
+      {/* Background Interativo com Partículas (Efeito Empresarial Moderno) */}
+      <ParticleCanvas />
+
       {/* Decoração de fundo de alta fidelidade para um Modo Escuro ainda mais imersivo */}
       <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] sm:w-[600px] sm:h-[600px] md:w-[900px] md:h-[900px] blur-[120px] sm:blur-[150px] rounded-full pointer-events-none bg-gradient-to-tr from-[#00BFFF]/20 via-[#FF1493]/15 to-[#8B5CF6]/20 animate-float z-0"></div>
 
@@ -25,8 +155,10 @@ export const Hero = () => {
 
           <FadeIn delay={300}>
             <h1 className="text-5xl sm:text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[1.08] sm:leading-[1.05] text-white max-w-5xl mx-auto px-2 sm:px-0">
-              Criamos o <br />
-              <span className="text-gradient">incomum.</span>
+              Criamos o <br className="hidden sm:block" />
+              <span className="text-gradient">
+                <Typewriter words={["incomum.", "excepcional.", "futuro.", "impossível."]} />
+              </span>
             </h1>
           </FadeIn>
 

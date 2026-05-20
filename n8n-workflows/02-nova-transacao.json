@@ -1,0 +1,81 @@
+{
+  "name": "💰 RKY Studio — Nova Transação → WhatsApp",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nova-transacao",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-transacao",
+      "name": "Webhook Transação",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const { type, description, category, amount, _timestamp } = $input.first().json;\n\nconst emoji = type === 'income' ? '💰' : '💸';\nconst label = type === 'income' ? 'RECEITA' : 'DESPESA';\nconst valor = parseFloat(amount).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });\n\nconst msg = `${emoji} *NOVA ${label}*\\n\\n` +\n  `📝 ${description}\\n` +\n  `🏷️ Categoria: ${category}\\n` +\n  `💵 Valor: *${valor}*\\n` +\n  `🕐 ${new Date(_timestamp).toLocaleString('pt-BR')}`;\n\nreturn [{ json: { msg } }];"
+      },
+      "id": "code-format-transacao",
+      "name": "Formatar Transação",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendText",
+        "instanceName": "rky-studio",
+        "remoteJid": "5598982715727@s.whatsapp.net",
+        "message": "={{ $json.msg }}"
+      },
+      "id": "evo-send-transacao",
+      "name": "WhatsApp → Notificação",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [720, 220],
+      "credentials": {
+        "evolutionApi": {
+          "id": "1",
+          "name": "Evolution API RKY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\"success\": true}"
+      },
+      "id": "respond-ok-2",
+      "name": "Responder OK",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [720, 400]
+    }
+  ],
+  "connections": {
+    "Webhook Transação": {
+      "main": [
+        [
+          { "node": "Formatar Transação", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Formatar Transação": {
+      "main": [
+        [
+          { "node": "WhatsApp → Notificação", "type": "main", "index": 0 },
+          { "node": "Responder OK", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo"
+  },
+  "tags": [{ "name": "RKY Studio" }]
+}

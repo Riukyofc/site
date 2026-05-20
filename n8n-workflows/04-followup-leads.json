@@ -1,0 +1,197 @@
+{
+  "name": "📅 RKY Studio — Follow-up Leads (3 dias)",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 10,
+              "triggerAtMinute": 0
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Todo dia às 10h",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://firestore.googleapis.com/v1/projects/rkystudio-b8c89/databases/(default)/documents/leads",
+        "options": {}
+      },
+      "id": "http-firebase-leads",
+      "name": "Buscar Leads Firebase",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [480, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const docs = $input.first().json.documents || [];\nconst threeDaysAgo = Date.now() - 3 * 24 * 60 * 60 * 1000;\n\nconst leadsToFollowUp = docs.filter(doc => {\n  const status = doc.fields?.status?.stringValue;\n  const date = doc.fields?.date?.timestampValue;\n  if (!status || !date) return false;\n  return status === 'new' && new Date(date).getTime() < threeDaysAgo;\n}).map(doc => {\n  const name = doc.fields?.name?.stringValue || 'Cliente';\n  const email = doc.fields?.email?.stringValue || '';\n  const docId = doc.name.split('/').pop();\n  \n  const msg = `Olá *${name}*! 👋\\n\\n` +\n    `Aqui é do *RKY Studio*. Passando para saber se ainda tem interesse no projeto que conversamos.\\n\\n` +\n    `Estamos com vagas abertas este mês! 🚀\\n\\n` +\n    `Responda aqui ou acesse: rkystudio.com/#contato\\n\\n` +\n    `_Equipe RKY Studio_ ✨`;\n    \n  return { json: { name, email, docId, msg } };\n});\n\nif (leadsToFollowUp.length === 0) {\n  return [{ json: { skip: true, count: 0 } }];\n}\n\nreturn leadsToFollowUp;"
+      },
+      "id": "code-filter-leads",
+      "name": "Filtrar Leads > 3 dias",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [710, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.skip }}",
+              "rightValue": true,
+              "operator": { "type": "boolean", "operation": "notEquals" }
+            }
+          ]
+        }
+      },
+      "id": "if-has-leads",
+      "name": "Tem leads?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [940, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Log para quando não há leads\nconst msg = `📅 *Follow-up Check*\\n\\nNenhum lead pendente com mais de 3 dias. Tudo em dia! ✅`;\nreturn [{ json: { msg } }];"
+      },
+      "id": "code-no-leads",
+      "name": "Sem Leads",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1170, 450]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendText",
+        "instanceName": "rky-studio",
+        "remoteJid": "5598982715727@s.whatsapp.net",
+        "message": "={{ $json.msg }}"
+      },
+      "id": "evo-notify-empty",
+      "name": "Aviso → Seu WhatsApp",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [1400, 450],
+      "credentials": {
+        "evolutionApi": {
+          "id": "1",
+          "name": "Evolution API RKY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const { name, email, docId } = $input.first().json;\n\nconst summary = `📅 *FOLLOW-UP ENVIADO*\\n\\n` +\n  `👤 ${name}\\n📧 ${email}\\n🆔 ${docId}`;\n\nreturn [{ json: { summary, docId } }];"
+      },
+      "id": "code-summary",
+      "name": "Montar Resumo",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1170, 200]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendText",
+        "instanceName": "rky-studio",
+        "remoteJid": "5598982715727@s.whatsapp.net",
+        "message": "={{ $json.summary }}"
+      },
+      "id": "evo-notify-followup",
+      "name": "Log Follow-up → Você",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [1400, 200],
+      "credentials": {
+        "evolutionApi": {
+          "id": "1",
+          "name": "Evolution API RKY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "=https://firestore.googleapis.com/v1/projects/rkystudio-b8c89/databases/(default)/documents/leads/{{ $json.docId }}?updateMask.fieldPaths=status",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"fields\":{\"status\":{\"stringValue\":\"followed_up\"}}}",
+        "options": {}
+      },
+      "id": "http-update-status",
+      "name": "Atualizar Status Firebase",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1630, 200]
+    }
+  ],
+  "connections": {
+    "Todo dia às 10h": {
+      "main": [
+        [
+          { "node": "Buscar Leads Firebase", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Buscar Leads Firebase": {
+      "main": [
+        [
+          { "node": "Filtrar Leads > 3 dias", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Filtrar Leads > 3 dias": {
+      "main": [
+        [
+          { "node": "Tem leads?", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Tem leads?": {
+      "main": [
+        [
+          { "node": "Montar Resumo", "type": "main", "index": 0 }
+        ],
+        [
+          { "node": "Sem Leads", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Sem Leads": {
+      "main": [
+        [
+          { "node": "Aviso → Seu WhatsApp", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Montar Resumo": {
+      "main": [
+        [
+          { "node": "Log Follow-up → Você", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Log Follow-up → Você": {
+      "main": [
+        [
+          { "node": "Atualizar Status Firebase", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo"
+  },
+  "tags": [{ "name": "RKY Studio" }]
+}

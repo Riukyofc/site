@@ -1,0 +1,172 @@
+{
+  "name": "🤖 RKY Studio — Chatbot WhatsApp + Gemini IA",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "whatsapp-incoming",
+        "responseMode": "lastNode",
+        "options": {}
+      },
+      "id": "webhook-incoming",
+      "name": "Mensagem Recebida",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "" },
+          "conditions": [
+            {
+              "leftValue": "={{ $json.data.key.fromMe }}",
+              "rightValue": false,
+              "operator": { "type": "boolean", "operation": "equals" }
+            }
+          ]
+        }
+      },
+      "id": "if-not-me",
+      "name": "Não sou eu?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [470, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const data = $input.first().json.data;\n\nconst remoteJid = data.key.remoteJid;\nconst message = data.message?.conversation ||\n                data.message?.extendedTextMessage?.text ||\n                data.message?.imageMessage?.caption ||\n                '';\nconst pushName = data.pushName || 'Cliente';\n\n// Ignorar mensagens vazias ou de grupos\nif (!message || remoteJid.includes('@g.us')) {\n  return [];\n}\n\nreturn [{ json: { remoteJid, message, pushName } }];"
+      },
+      "id": "code-extract",
+      "name": "Extrair Dados",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [690, 220]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={{ $env.GEMINI_API_KEY }}",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"system_instruction\": {\n    \"parts\": [{\n      \"text\": \"Você é o assistente virtual do RKY Studio, um estúdio de design e desenvolvimento web premium brasileiro. REGRAS OBRIGATÓRIAS: 1) Responda SEMPRE em português do Brasil, de forma profissional, amigável e concisa. 2) Máximo 3 parágrafos curtos. 3) Use emojis com moderação. 4) SERVIÇOS: Landing Pages (a partir de R$500), UI/UX Design (a partir de R$800), Sistemas Sob Medida (a partir de R$2.000), Otimização SEO (a partir de R$300). 5) Para orçamento personalizado, direcione ao site: rkystudio.com/#contato 6) Portfólio: rkystudio.com/#portfolio 7) Horário de atendimento humano: seg-sex 9h-18h. 8) NÃO invente informações. Se não souber, sugira contato pelo formulário. 9) Se perguntarem sobre prazo, diga que varia de 7 a 30 dias dependendo da complexidade.\"\n    }]\n  },\n  \"contents\": [{\n    \"role\": \"user\",\n    \"parts\": [{ \"text\": \"{{ $json.message }}\" }]\n  }],\n  \"generationConfig\": {\n    \"maxOutputTokens\": 300,\n    \"temperature\": 0.7\n  }\n}",
+        "options": {}
+      },
+      "id": "http-gemini",
+      "name": "Gemini IA",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [920, 220]
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\n\nlet reply = 'Desculpe, não consegui processar sua mensagem. Por favor, tente novamente ou acesse rkystudio.com/#contato 😊';\n\ntry {\n  reply = response.candidates[0].content.parts[0].text;\n} catch (e) {\n  // Mantém a mensagem padrão de fallback\n}\n\nconst remoteJid = $('Extrair Dados').first().json.remoteJid;\n\nreturn [{ json: { reply, remoteJid } }];"
+      },
+      "id": "code-format-reply",
+      "name": "Formatar Resposta",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1150, 220]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendText",
+        "instanceName": "rky-studio",
+        "remoteJid": "={{ $json.remoteJid }}",
+        "message": "={{ $json.reply }}"
+      },
+      "id": "evo-reply",
+      "name": "Responder WhatsApp",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [1380, 220],
+      "credentials": {
+        "evolutionApi": {
+          "id": "1",
+          "name": "Evolution API RKY"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Notificar o dono que houve uma conversa\nconst remoteJid = $('Extrair Dados').first().json.remoteJid;\nconst pushName = $('Extrair Dados').first().json.pushName;\nconst message = $('Extrair Dados').first().json.message;\nconst reply = $('Formatar Resposta').first().json.reply;\n\nconst numero = remoteJid.replace('@s.whatsapp.net', '');\n\nconst log = `📋 *LOG DO CHATBOT*\\n\\n` +\n  `👤 *Cliente:* ${pushName}\\n` +\n  `📞 *Número:* ${numero}\\n` +\n  `💬 *Pergunta:* ${message}\\n` +\n  `🤖 *Resposta IA:* ${reply.substring(0, 200)}...`;\n\nreturn [{ json: { log } }];"
+      },
+      "id": "code-log",
+      "name": "Montar Log",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1380, 420]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "sendText",
+        "instanceName": "rky-studio",
+        "remoteJid": "5598982715727@s.whatsapp.net",
+        "message": "={{ $json.log }}"
+      },
+      "id": "evo-log-owner",
+      "name": "Log → Seu WhatsApp",
+      "type": "n8n-nodes-evolution-api.evolutionApi",
+      "typeVersion": 1,
+      "position": [1610, 420],
+      "credentials": {
+        "evolutionApi": {
+          "id": "1",
+          "name": "Evolution API RKY"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Mensagem Recebida": {
+      "main": [
+        [
+          { "node": "Não sou eu?", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Não sou eu?": {
+      "main": [
+        [
+          { "node": "Extrair Dados", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Extrair Dados": {
+      "main": [
+        [
+          { "node": "Gemini IA", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Gemini IA": {
+      "main": [
+        [
+          { "node": "Formatar Resposta", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Formatar Resposta": {
+      "main": [
+        [
+          { "node": "Responder WhatsApp", "type": "main", "index": 0 },
+          { "node": "Montar Log", "type": "main", "index": 0 }
+        ]
+      ]
+    },
+    "Montar Log": {
+      "main": [
+        [
+          { "node": "Log → Seu WhatsApp", "type": "main", "index": 0 }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "timezone": "America/Sao_Paulo"
+  },
+  "tags": [{ "name": "RKY Studio" }]
+}
