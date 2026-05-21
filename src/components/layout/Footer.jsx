@@ -1,4 +1,5 @@
 import React from 'react';
+import { ArrowUp } from 'lucide-react';
 import { Logo } from './Logo';
 
 // Custom inline elite SVGs to guarantee build success and avoid missing esm exports for brand icons
@@ -33,10 +34,10 @@ const GithubIcon = () => (
 
 export const Footer = () => {
   return (
-    <footer className="pt-16 sm:pt-20 pb-10 sm:pb-12 border-t border-white/5 bg-[#0E0E11]">
+    <footer className="pt-16 sm:pt-20 pb-20 md:pb-12 border-t border-white/5 bg-[#0E0E11]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-8 mb-12 sm:mb-16">
-          
+
           <div className="text-center md:text-left flex flex-col items-center md:items-start">
             {/* Logo de Elite Baseada em Texto */}
             <a href="#home" className="flex items-center justify-center mb-6 group transition-transform hover:scale-105 duration-300">
@@ -55,11 +56,11 @@ export const Footer = () => {
               { Icon: LinkedinIcon, href: '#', label: 'LinkedIn' },
               { Icon: GithubIcon, href: '#', label: 'GitHub' },
             ].map(({ Icon, href, label }, idx) => (
-              <a 
-                key={idx} 
-                href={href} 
+              <a
+                key={idx}
+                href={href}
                 aria-label={label}
-                className="w-11 h-11 sm:w-12 sm:h-12 rounded-full border border-white/10 flex items-center justify-center text-white hover:text-[#00BFFF] hover:border-[#00BFFF] hover:bg-white/5 transition-all duration-300 hover:scale-110"
+                className="w-12 h-12 rounded-full border border-white/10 flex items-center justify-center text-white hover:text-[#00BFFF] hover:border-[#00BFFF] hover:bg-white/5 transition-all duration-300 hover:scale-110 touch-target"
               >
                 <Icon />
               </a>
@@ -75,6 +76,15 @@ export const Footer = () => {
             <a href="#" className="hover:text-[#00BFFF] transition-colors">Termos de Uso</a>
           </div>
         </div>
+
+        {/* Back to top */}
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="mt-8 mx-auto flex items-center gap-2 text-white/30 hover:text-[#00BFFF] transition-colors text-xs font-bold uppercase tracking-wider group"
+        >
+          <ArrowUp size={14} className="group-hover:-translate-y-1 transition-transform" />
+          Voltar ao Topo
+        </button>
       </div>
     </footer>
   );

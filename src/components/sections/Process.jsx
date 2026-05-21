@@ -21,9 +21,9 @@ export const Process = () => {
           highlight="ideias em realidade."
         />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
-          {/* Connection line - desktop only */}
-          <div className="hidden lg:block absolute top-1/2 left-[12%] right-[12%] h-px bg-gradient-to-r from-[#00BFFF]/20 via-[#8B5CF6]/20 to-[#FF1493]/20" />
+        {/* Desktop: Grid with connection line */}
+        <div className="hidden lg:grid lg:grid-cols-4 gap-6 relative">
+          <div className="absolute top-1/2 left-[12%] right-[12%] h-px bg-gradient-to-r from-[#00BFFF]/20 via-[#8B5CF6]/20 to-[#FF1493]/20" />
 
           {steps.map((step, index) => (
             <FadeIn key={index} delay={index * 150} direction="up">
@@ -36,6 +36,32 @@ export const Process = () => {
                 </div>
                 <h4 className="text-lg font-black text-white mb-2">{step.title}</h4>
                 <p className="text-xs sm:text-sm text-white/40 font-medium leading-relaxed">{step.desc}</p>
+              </div>
+            </FadeIn>
+          ))}
+        </div>
+
+        {/* Mobile/Tablet: Vertical timeline */}
+        <div className="lg:hidden space-y-0">
+          {steps.map((step, index) => (
+            <FadeIn key={index} delay={index * 150} direction="up">
+              <div className="flex gap-4 sm:gap-6 relative">
+                {/* Vertical line connector */}
+                {index < steps.length - 1 && (
+                  <div className="absolute left-[23px] top-[60px] bottom-0 w-px bg-gradient-to-b from-white/10 to-transparent" />
+                )}
+                {/* Step number circle */}
+                <div className="shrink-0 w-12 h-12 rounded-full bg-gradient-to-br from-[#00BFFF]/20 to-[#8B5CF6]/20 border border-white/10 flex items-center justify-center">
+                  <span className="text-xs font-black text-[#00BFFF]">{step.num}</span>
+                </div>
+                {/* Content */}
+                <div className="glass-card p-5 rounded-2xl flex-1 mb-4">
+                  <div className="flex items-center gap-3 mb-2">
+                    <step.Icon size={20} className="text-[#00BFFF]" />
+                    <h4 className="text-base font-black text-white">{step.title}</h4>
+                  </div>
+                  <p className="text-xs text-white/40 font-medium leading-relaxed">{step.desc}</p>
+                </div>
               </div>
             </FadeIn>
           ))}

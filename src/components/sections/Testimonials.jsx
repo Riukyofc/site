@@ -1,14 +1,31 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Quote, Star } from 'lucide-react';
 import { FadeIn } from '../layout/FadeIn';
 import { SectionHeader } from '../ui/SectionHeader';
 
 export const Testimonials = () => {
+  const [activeIndex, setActiveIndex] = useState(0);
+  const scrollRef = useRef(null);
+
   const testimonials = [
     { quote: "O nível de precisão e capricho visual do RKY Studio é algo fora do comum. Cada pixel reflete cuidado extremo com a experiência do usuário.", author: "Sarah Viana", role: "CEO & Tech Founder", gradient: "from-[#00BFFF] to-[#FF1493]", initials: "SV" },
     { quote: "Código totalmente limpo, otimizado e incrivelmente rápido. A taxa de conversão e a velocidade de carregamento das nossas páginas decolou.", author: "Marcos Aurélio", role: "Diretor de Produto", gradient: "from-[#FF1493] to-[#8B5CF6]", initials: "MA" },
     { quote: "A equipe entendeu perfeitamente a nossa essência e entregou uma interface premium, imersiva e muito acima dos padrões do mercado.", author: "Elena Rostova", role: "Head de Design & Branding", gradient: "from-[#8B5CF6] to-[#00BFFF]", initials: "ER" },
   ];
+
+  // Track active card on mobile via scroll
+  useEffect(() => {
+    const container = scrollRef.current;
+    if (!container) return;
+    const handleScroll = () => {
+      const scrollLeft = container.scrollLeft;
+      const cardWidth = container.offsetWidth * 0.85;
+      const index = Math.round(scrollLeft / (cardWidth + 16));
+      setActiveIndex(Math.min(index, testimonials.length - 1));
+    };
+    container.addEventListener('scroll', handleScroll, { passive: true });
+    return () => container.removeEventListener('scroll', handleScroll);
+  }, [testimonials.length]);
 
   return (
     <section className="py-20 sm:py-32 relative z-10 overflow-hidden">
@@ -22,9 +39,13 @@ export const Testimonials = () => {
           highlight="código."
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        {/* Mobile: horizontal carousel */}
+        <div
+          ref={scrollRef}
+          className="flex md:grid md:grid-cols-3 gap-4 sm:gap-6 overflow-x-auto snap-x md:overflow-visible pb-4 md:pb-0 -mx-4 px-4 md:mx-0 md:px-0"
+        >
           {testimonials.map((item, index) => (
-            <FadeIn key={index} delay={index * 150} direction="up" className="h-full">
+            <FadeIn key={index} delay={index * 150} direction="up" className="h-full min-w-[85vw] md:min-w-0 snap-item">
               <div className="glass-card p-6 sm:p-8 rounded-2xl sm:rounded-3xl h-full flex flex-col justify-between relative group hover:border-white/15 transition-all duration-500">
                 <div className="absolute top-4 right-4 text-white/[0.04] group-hover:text-white/[0.08] transition-colors pointer-events-none">
                   <Quote size={50} className="rotate-12" />
@@ -50,6 +71,13 @@ export const Testimonials = () => {
                 </div>
               </div>
             </FadeIn>
+          ))}
+        </div>
+
+        {/* Dots indicator - mobile only */}
+        <div className="flex md:hidden justify-center gap-2 mt-4">
+          {testimonials.map((_, i) => (
+            <div key={i} className={`w-2 h-2 rounded-full transition-all duration-300 ${activeIndex === i ? 'bg-[#FF1493] w-6' : 'bg-white/20'}`} />
           ))}
         </div>
       </div>

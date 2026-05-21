@@ -10,9 +10,9 @@ import { Hero } from '../components/sections/Hero';
 const LogoMarquee = lazy(() => import('../components/sections/LogoMarquee').then(m => ({ default: m.LogoMarquee })));
 const Stats = lazy(() => import('../components/sections/Stats').then(m => ({ default: m.Stats })));
 const About = lazy(() => import('../components/sections/About').then(m => ({ default: m.About })));
-const Services = lazy(() => import('../components/sections/Services').then(m => ({ default: m.Services })));
 const Portfolio = lazy(() => import('../components/sections/Portfolio').then(m => ({ default: m.Portfolio })));
 const Catalog = lazy(() => import('../components/sections/Catalog').then(m => ({ default: m.Catalog })));
+const BudgetCalculator = lazy(() => import('../components/sections/BudgetCalculator').then(m => ({ default: m.BudgetCalculator })));
 const Process = lazy(() => import('../components/sections/Process').then(m => ({ default: m.Process })));
 const Testimonials = lazy(() => import('../components/sections/Testimonials').then(m => ({ default: m.Testimonials })));
 const CTA = lazy(() => import('../components/sections/CTA').then(m => ({ default: m.CTA })));
@@ -36,9 +36,9 @@ export const LandingPage = () => {
           <LogoMarquee />
           <Stats />
           <About />
-          <Services />
           <Portfolio />
           <Catalog />
+          <BudgetCalculator />
           <Process />
           <Testimonials />
           <CTA />

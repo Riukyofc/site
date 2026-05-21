@@ -61,6 +61,106 @@
   50% { opacity: 0.8; }
 }
 
+/* Flying to cart animation */
+@keyframes flyToCart {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(0.5) translateY(-100px); opacity: 0.7; }
+  100% { transform: scale(0) translateY(-200px) translateX(200px); opacity: 0; }
+}
+
+/* Ribbon glow pulse */
+@keyframes ribbonGlow {
+  0%, 100% { box-shadow: 0 0 8px rgba(255, 20, 147, 0.4); }
+  50% { box-shadow: 0 0 20px rgba(255, 20, 147, 0.8), 0 0 40px rgba(255, 20, 147, 0.3); }
+}
+
+/* Skeleton shimmer loading */
+@keyframes skeletonShimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* Drawer slide in from right */
+@keyframes slideInDrawer {
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+/* Drawer slide out to right */
+@keyframes slideOutDrawer {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(100%); opacity: 0; }
+}
+
+/* Bounce down for scroll indicator */
+@keyframes bounceDown {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(8px); }
+}
+
+/* Expand card */
+@keyframes expandCard {
+  from { max-height: 0; opacity: 0; padding: 0; }
+  to { max-height: 500px; opacity: 1; padding: 1.5rem; }
+}
+
+/* Counter pulse */
+@keyframes counterPulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+/* Tab underline slide */
+@keyframes tabSlide {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+/* Particle float */
+@keyframes particleFloat {
+  0%, 100% { transform: translate(0, 0); }
+  25% { transform: translate(10px, -15px); }
+  50% { transform: translate(-5px, -25px); }
+  75% { transform: translate(-15px, -10px); }
+}
+
+/* Slide up reveal */
+@keyframes slideUpReveal {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Bottom nav slide up */
+@keyframes bottomNavIn {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
+/* Preloader wipe */
+@keyframes preloaderWipe {
+  0% { clip-path: inset(0 0 0 0); }
+  100% { clip-path: inset(0 0 100% 0); }
+}
+
+/* Letter reveal for preloader */
+@keyframes letterReveal {
+  0% { opacity: 0; transform: translateY(20px) rotateX(90deg); }
+  100% { opacity: 1; transform: translateY(0) rotateX(0deg); }
+}
+
+/* Progress bar fill */
+@keyframes progressFill {
+  from { width: 0%; }
+  to { width: 100%; }
+}
+
+/* Scroll image (for portfolio hover auto-scroll effect) */
+@keyframes scrollImage {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(calc(-100% + 250px)); }
+}
+
 /* Stagger utility classes */
 .stagger-1 { animation-delay: 0.1s; }
 .stagger-2 { animation-delay: 0.2s; }
@@ -68,3 +168,17 @@
 .stagger-4 { animation-delay: 0.4s; }
 .stagger-5 { animation-delay: 0.5s; }
 .stagger-6 { animation-delay: 0.6s; }
+
+/* Animation utilities */
+.animate-fly-to-cart { animation: flyToCart 0.6s ease-in forwards; }
+.animate-ribbon-glow { animation: ribbonGlow 2s ease-in-out infinite; }
+.animate-skeleton { animation: skeletonShimmer 1.5s ease-in-out infinite; }
+.animate-drawer-in { animation: slideInDrawer 0.3s ease-out forwards; }
+.animate-drawer-out { animation: slideOutDrawer 0.3s ease-in forwards; }
+.animate-bounce-down { animation: bounceDown 2s ease-in-out infinite; }
+.animate-expand { animation: expandCard 0.4s ease-out forwards; }
+.animate-tab-slide { animation: tabSlide 0.3s ease-out forwards; transform-origin: left; }
+.animate-slide-up { animation: slideUpReveal 0.5s ease-out forwards; }
+.animate-bottom-nav { animation: bottomNavIn 0.5s ease-out forwards; }
+.animate-letter-reveal { animation: letterReveal 0.6s ease-out forwards; }
+.animate-scroll-image { animation: scrollImage 3s ease-in-out forwards; }

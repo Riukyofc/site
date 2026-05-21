@@ -2,7 +2,7 @@ import React from 'react';
 
 export const FloatingContact = () => {
   return (
-    <div className="fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-50">
+    <div className="fixed bottom-[84px] md:bottom-8 right-4 sm:right-8 z-50">
       <a 
         href="https://wa.me/5598982715727?text=Olá,%20gostaria%20de%20falar%20sobre%20um%20projeto%20com%20o%20RKY%20Studio!"
         target="_blank"
