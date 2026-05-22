@@ -27,7 +27,7 @@ export const LogoMarquee = () => {
         <div className="flex shrink-0 animate-marquee items-center gap-6 sm:gap-10 pr-6 sm:pr-10">
           {duplicated.map((tech, idx) => (
             <div
-              key={idx}
+              key={`marquee-${idx}`}
               className="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-white/[0.02] border border-white/[0.06] backdrop-blur-sm transition-all duration-300 hover:border-[#00BFFF]/40 hover:bg-white/[0.04] group"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-[#FF1493] group-hover:bg-[#00BFFF] transition-colors shadow-[0_0_6px_#FF1493] group-hover:shadow-[0_0_6px_#00BFFF]" />
