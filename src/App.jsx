@@ -28,7 +28,7 @@ function App() {
       <AuthProvider>
         <CartProvider>
           <CartSidebar />
-          <Router>
+          <Router basename={import.meta.env.BASE_URL}>
             <Suspense fallback={<PageLoader />}>
               <Routes>
                 {/* Rota Pública do Site */}

@@ -217,10 +217,11 @@ export const BudgetCalculator = () => {
                 {/* CTA */}
                 <a
                   href="#contato"
-                  className="relative flex items-center justify-center gap-2 w-full py-4 rounded-xl font-bold text-sm uppercase tracking-wider bg-gradient-to-r from-[#00BFFF] to-[#8B5CF6] text-white hover:scale-[1.02] active:scale-[0.98] transition-transform overflow-hidden shadow-[0_0_20px_rgba(0,191,255,0.2)]"
+                  className="relative flex items-center justify-center gap-2 w-full py-3.5 sm:py-4 rounded-xl font-bold text-xs sm:text-sm uppercase tracking-wider bg-gradient-to-r from-[#00BFFF] to-[#8B5CF6] text-white hover:scale-[1.02] active:scale-[0.98] transition-transform overflow-hidden shadow-[0_0_20px_rgba(0,191,255,0.2)]"
                 >
                   <span className="relative z-10 flex items-center gap-2">
-                    Solicitar Orçamento Detalhado
+                    <span className="hidden sm:inline">Solicitar Orçamento Detalhado</span>
+                    <span className="sm:hidden">Solicitar Orçamento</span>
                     <ArrowRight size={16} />
                   </span>
                   <div className="absolute inset-0 shimmer" />
