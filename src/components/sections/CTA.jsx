@@ -43,7 +43,7 @@ export const CTA = () => {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-12 relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
           <FadeIn direction="right">
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter mb-6 text-white leading-[1.1]">
+            <h2 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tighter mb-6 text-white leading-[1.1]">
               Vamos construir o <br />
               <span className="text-gradient">próximo nível.</span>
             </h2>

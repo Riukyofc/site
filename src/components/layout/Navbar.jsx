@@ -80,7 +80,7 @@ export const Navbar = () => {
 
   return (
     <>
-      <nav className={`fixed w-full top-0 left-0 z-50 transition-all duration-500 ${scrolled ? 'glass-nav py-3 md:py-4 shadow-lg' : 'bg-transparent py-5 md:py-6'}`}>
+      <nav className={`fixed w-full top-0 left-0 z-50 transition-all duration-500 ${scrolled ? 'glass-nav py-2.5 md:py-4 shadow-lg' : 'bg-transparent py-3 md:py-6'}`}>
         {/* Scroll Progress Bar Premium */}
         <div className="absolute top-0 left-0 w-full h-[2px] sm:h-[3px] bg-white/5 z-50">
           <div
@@ -264,7 +264,7 @@ export const Navbar = () => {
               <button
                 key={item.id}
                 onClick={handleClick}
-                className={`flex flex-col items-center gap-0.5 py-1.5 px-3 rounded-xl transition-all touch-target ${
+                className={`flex flex-col items-center gap-0.5 py-2 px-4 rounded-xl transition-all touch-target ${
                   isActive ? 'text-[#00BFFF]' : 'text-white/40'
                 }`}
               >

@@ -120,7 +120,7 @@ const ProjectCard = memo(({ project, index, isHero, onPreview }) => {
   );
 
   /* Hero card is taller to create visual hierarchy */
-  const imageHeight = isHero ? 'h-[280px] sm:h-[340px] lg:h-[380px]' : 'h-[240px] sm:h-[260px]';
+  const imageHeight = isHero ? 'h-[220px] sm:h-[340px] lg:h-[380px]' : 'h-[180px] sm:h-[260px]';
 
   return (
     <GlassCard
@@ -161,12 +161,12 @@ const ProjectCard = memo(({ project, index, isHero, onPreview }) => {
         />
 
         {/* Project number watermark */}
-        <div className="absolute top-4 left-4 text-white/[0.05] font-black text-5xl sm:text-6xl select-none pointer-events-none transition-all duration-500 group-hover:text-white/[0.1]">
+        <div className="absolute top-4 left-4 text-white/[0.05] font-black text-4xl sm:text-6xl select-none pointer-events-none transition-all duration-500 group-hover:text-white/[0.1]">
           0{index + 1}
         </div>
 
         {/* Hover overlay with CTA buttons */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#030305] via-[#030305]/50 to-transparent opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-5 sm:p-6">
+        <div className="absolute inset-0 bg-gradient-to-t from-[#030305] via-[#030305]/50 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-4 sm:p-6">
           <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
             <div className="flex gap-2.5">
               {/* Ver ao Vivo → abre link externo */}
@@ -199,7 +199,7 @@ const ProjectCard = memo(({ project, index, isHero, onPreview }) => {
       </div>
 
       {/* Card body — info area below image */}
-      <div className="p-4 sm:p-5 flex flex-col gap-3">
+      <div className="p-3 sm:p-5 flex flex-col gap-2.5 sm:gap-3">
         {/* Category + device indicator */}
         <div className="flex items-center justify-between">
           <span
@@ -212,7 +212,7 @@ const ProjectCard = memo(({ project, index, isHero, onPreview }) => {
         </div>
 
         {/* Title */}
-        <h3 className="text-lg sm:text-xl font-black text-white leading-tight">
+        <h3 className="text-base sm:text-xl font-black text-white leading-tight">
           {project.title}
         </h3>
 
@@ -270,7 +270,7 @@ export const Portfolio = () => {
               <FadeIn
                 key={project.title}
                 delay={index * 100}
-                className="min-w-[85vw] snap-item"
+                className="min-w-[80vw] snap-item"
               >
                 <ProjectCard
                   project={project}

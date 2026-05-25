@@ -34,7 +34,7 @@ const GithubIcon = () => (
 
 export const Footer = () => {
   return (
-    <footer className="pt-16 sm:pt-20 pb-20 md:pb-12 border-t border-white/5 bg-[#0E0E11]">
+    <footer className="pt-16 sm:pt-20 pb-28 md:pb-12 border-t border-white/5 bg-[#0E0E11]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-12">
         <div className="flex flex-col md:flex-row justify-between items-center md:items-start gap-8 mb-12 sm:mb-16">
 

@@ -66,7 +66,7 @@ export const BudgetCalculator = () => {
         <FadeIn>
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">
             {/* Left: Options */}
-            <div className="lg:col-span-3 space-y-8">
+            <div className="lg:col-span-3 space-y-6 sm:space-y-8 order-last lg:order-none">
               {/* Service Selection */}
               <div>
                 <h4 className="text-sm font-bold text-white/60 uppercase tracking-wider mb-4 flex items-center gap-2">
@@ -163,8 +163,8 @@ export const BudgetCalculator = () => {
             </div>
 
             {/* Right: Result Panel */}
-            <div className="lg:col-span-2">
-              <div className="glass-premium rounded-2xl sm:rounded-3xl p-6 sm:p-8 sticky top-28">
+            <div className="lg:col-span-2 order-first lg:order-none">
+              <div className="glass-premium rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:sticky lg:top-28">
                 <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#00BFFF] via-[#8B5CF6] to-[#FF1493] rounded-t-2xl" />
 
                 <h4 className="text-xs font-bold text-white/40 uppercase tracking-widest mb-6">Estimativa de Investimento</h4>
@@ -208,7 +208,7 @@ export const BudgetCalculator = () => {
                   <p className="text-[10px] font-bold text-white/30 uppercase tracking-widest mb-2">Total Estimado</p>
                   <div className="flex items-baseline gap-1">
                     <span className="text-xs text-white/40">R$</span>
-                    <span className="text-4xl sm:text-5xl font-black text-gradient tracking-tight">
+                    <span className="text-3xl sm:text-5xl font-black text-gradient tracking-tight">
                       {total.toLocaleString('pt-BR')}
                     </span>
                   </div>

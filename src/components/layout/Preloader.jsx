@@ -42,7 +42,7 @@ export const Preloader = () => {
         {'RKY'.split('').map((letter, i) => (
           <span
             key={letter}
-            className="text-5xl sm:text-7xl font-black text-white animate-[fadeUp_0.6s_ease-out_forwards]"
+            className="text-4xl sm:text-7xl font-black text-white animate-[fadeUp_0.6s_ease-out_forwards]"
             style={{ opacity: 0, animationDelay: `${i * 0.15 + 0.2}s` }}
           >
             {letter}

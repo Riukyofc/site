@@ -89,10 +89,10 @@ const ServiceCard = ({ service, index }) => {
 
   return (
     <FadeIn delay={index * 100} direction="up" className="h-full">
-      <div className="glass-card hover-glow rounded-2xl sm:rounded-3xl h-full flex flex-col group cursor-pointer relative overflow-hidden">
+      <div className="glass-card md:hover-glow rounded-2xl sm:rounded-3xl h-full flex flex-col group cursor-pointer relative overflow-hidden">
         <div className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${service.gradient} opacity-40 group-hover:opacity-100 transition-opacity`} />
 
-        <div className="p-6 flex flex-col flex-grow">
+        <div className="p-4 sm:p-6 flex flex-col flex-grow">
           {/* Icon + Title */}
           <div className="relative mb-5 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-white/[0.04] border border-white/[0.08] group-hover:scale-110 transition-transform duration-500">
             <div className={`absolute inset-0 rounded-xl bg-gradient-to-tr ${service.gradient} opacity-15 blur-md group-hover:opacity-30 transition-opacity`} />
@@ -200,7 +200,7 @@ const ProductCard = ({ item, index, onPreview }) => {
           </div>
         )}
 
-        <div className="bg-black/60 backdrop-blur-md rounded-[20px] p-6 sm:p-8 h-full flex flex-col relative z-10 border border-white/[0.04] group-hover:border-white/[0.08] transition-colors">
+        <div className="bg-black/60 backdrop-blur-md rounded-[20px] p-4 sm:p-8 h-full flex flex-col relative z-10 border border-white/[0.04] group-hover:border-white/[0.08] transition-colors">
           <div className={`absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r ${isProject ? 'from-cyan-500 to-blue-500' : 'from-purple-500 to-pink-500'}`} />
 
           {item.link && (
@@ -355,7 +355,7 @@ export const Catalog = () => {
 
           {/* Tabs */}
           <FadeIn delay={100}>
-            <div className="flex items-center gap-1 p-1.5 rounded-2xl sm:rounded-full bg-white/[0.03] border border-white/[0.06] backdrop-blur-md mb-10 sm:mb-14 overflow-x-auto snap-x sm:overflow-visible sm:justify-center">
+            <div className="flex items-center gap-1.5 p-1 rounded-xl sm:rounded-full bg-white/[0.03] border border-white/[0.06] backdrop-blur-md mb-10 sm:mb-14 overflow-x-auto snap-x sm:overflow-visible sm:justify-center">
               {tabs.map((tab) => {
                 const TabIcon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -363,7 +363,7 @@ export const Catalog = () => {
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-2 px-4 sm:px-6 py-2.5 rounded-xl sm:rounded-full text-xs uppercase tracking-wider font-bold transition-all duration-300 whitespace-nowrap snap-item ${
+                    className={`flex items-center gap-2 px-3 sm:px-6 py-2 rounded-xl sm:rounded-full text-xs uppercase tracking-wider font-bold transition-all duration-300 whitespace-nowrap snap-item ${
                       isActive
                         ? 'bg-gradient-to-r from-[#FF1493] to-[#8B5CF6] text-white shadow-[0_0_15px_rgba(255,20,147,0.3)]'
                         : 'text-white/40 hover:text-white'
