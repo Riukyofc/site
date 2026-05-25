@@ -17,9 +17,9 @@ const services = [
     gradient: 'from-[#00BFFF] to-[#8B5CF6]',
     features: ['Design Responsivo', 'Animações CSS', 'SEO Otimizado', 'Performance 95+'],
     tiers: [
-      { name: 'Essencial', price: 'R$ 500', desc: '1 página, design responsivo' },
-      { name: 'Profissional', price: 'R$ 1.200', desc: 'Até 5 páginas, animações, SEO', recommended: true },
-      { name: 'Premium', price: 'Sob Consulta', desc: 'Projeto completo customizado' },
+      { name: 'Essencial', price: '497', cents: ',90', desc: '1 página, design responsivo', fromLabel: 'a partir de' },
+      { name: 'Profissional', price: '1.197', cents: ',00', desc: 'Até 5 páginas, animações, SEO', recommended: true, fromLabel: 'a partir de' },
+      { name: 'Premium', price: 'Sob Consulta', cents: '', desc: 'Projeto completo customizado', fromLabel: 'investimento' },
     ],
     deliveryTime: '7-15 dias',
     techStack: ['React', 'Tailwind', 'Vite'],
@@ -31,9 +31,9 @@ const services = [
     gradient: 'from-[#FF1493] to-[#8B5CF6]',
     features: ['Figma Profissional', 'User Research', 'Design System', 'Protótipos'],
     tiers: [
-      { name: 'Essencial', price: 'R$ 800', desc: 'Wireframes + 3 telas' },
-      { name: 'Profissional', price: 'R$ 2.000', desc: 'Design system completo', recommended: true },
-      { name: 'Premium', price: 'Sob Consulta', desc: 'Branding + UI completo' },
+      { name: 'Essencial', price: '799', cents: ',90', desc: 'Wireframes + 3 telas', fromLabel: 'a partir de' },
+      { name: 'Profissional', price: '1.997', cents: ',00', desc: 'Design system completo', recommended: true, fromLabel: 'a partir de' },
+      { name: 'Premium', price: 'Sob Consulta', cents: '', desc: 'Branding + UI completo', fromLabel: 'investimento' },
     ],
     deliveryTime: '10-20 dias',
     techStack: ['Figma', 'Adobe XD'],
@@ -45,9 +45,9 @@ const services = [
     gradient: 'from-[#8B5CF6] to-[#00BFFF]',
     features: ['React / Next.js', 'Firebase / API', 'Painel Admin', 'Deploy'],
     tiers: [
-      { name: 'Essencial', price: 'R$ 2.000', desc: 'MVP funcional básico' },
-      { name: 'Profissional', price: 'R$ 5.000', desc: 'Sistema completo + admin', recommended: true },
-      { name: 'Premium', price: 'Sob Consulta', desc: 'SaaS enterprise completo' },
+      { name: 'Essencial', price: '1.997', cents: ',00', desc: 'MVP funcional básico', fromLabel: 'a partir de' },
+      { name: 'Profissional', price: '4.997', cents: ',00', desc: 'Sistema completo + admin', recommended: true, fromLabel: 'a partir de' },
+      { name: 'Premium', price: 'Sob Consulta', cents: '', desc: 'SaaS enterprise completo', fromLabel: 'investimento' },
     ],
     deliveryTime: '20-45 dias',
     techStack: ['React', 'Node.js', 'Firebase'],
@@ -59,9 +59,9 @@ const services = [
     gradient: 'from-[#FF8C00] to-[#FF1493]',
     features: ['PageSpeed 95+', 'Google Analytics', 'Meta Tags', 'Sitemap'],
     tiers: [
-      { name: 'Essencial', price: 'R$ 300', desc: 'Auditoria + otimização básica' },
-      { name: 'Profissional', price: 'R$ 800', desc: 'SEO completo + analytics', recommended: true },
-      { name: 'Premium', price: 'Sob Consulta', desc: 'Estratégia SEO contínua' },
+      { name: 'Essencial', price: '297', cents: ',90', desc: 'Auditoria + otimização básica', fromLabel: 'a partir de' },
+      { name: 'Profissional', price: '797', cents: ',00', desc: 'SEO completo + analytics', recommended: true, fromLabel: 'a partir de' },
+      { name: 'Premium', price: 'Sob Consulta', cents: '', desc: 'Estratégia SEO contínua', fromLabel: 'investimento' },
     ],
     deliveryTime: '5-10 dias',
     techStack: ['Lighthouse', 'Analytics'],
@@ -152,17 +152,26 @@ const ServiceCard = ({ service, index }) => {
               >
                 {tier.recommended && (
                   <span className="absolute -top-2.5 left-4 px-2.5 py-0.5 rounded-full text-[8px] font-black uppercase tracking-widest bg-gradient-to-r from-[#00BFFF] to-[#8B5CF6] text-white">
-                    Recomendado
+                    🔥 Mais Popular
                   </span>
                 )}
-                <div className="flex items-center justify-between">
-                  <div>
+                <div className="flex items-center justify-between gap-3">
+                  <div className="min-w-0">
                     <h5 className="text-sm font-bold text-white">{tier.name}</h5>
                     <p className="text-[10px] text-white/40 mt-0.5">{tier.desc}</p>
                   </div>
-                  <span className={`text-base font-black ${tier.recommended ? 'text-[#00BFFF]' : 'text-white/70'}`}>
-                    {tier.price}
-                  </span>
+                  <div className="text-right shrink-0">
+                    <span className="text-[8px] font-bold uppercase tracking-widest text-white/30 block mb-0.5">{tier.fromLabel}</span>
+                    {tier.cents ? (
+                      <div className="flex items-baseline gap-0.5">
+                        <span className={`text-[10px] font-bold ${tier.recommended ? 'text-[#00BFFF]/70' : 'text-white/40'}`}>R$</span>
+                        <span className={`text-xl sm:text-2xl font-black tracking-tight leading-none ${tier.recommended ? 'text-[#00BFFF]' : 'text-white'}`}>{tier.price}</span>
+                        <span className={`text-xs font-bold ${tier.recommended ? 'text-[#00BFFF]/60' : 'text-white/40'}`}>{tier.cents}</span>
+                      </div>
+                    ) : (
+                      <span className={`text-sm font-black ${tier.recommended ? 'text-[#00BFFF]' : 'text-white/70'}`}>{tier.price}</span>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}

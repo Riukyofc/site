@@ -4,10 +4,10 @@ import { FadeIn } from '../layout/FadeIn';
 import { SectionHeader } from '../ui/SectionHeader';
 
 const serviceOptions = [
-  { id: 'landing', label: 'Landing Page', icon: Monitor, basePrice: 500, maxPrice: 1200, color: 'from-[#00BFFF] to-[#8B5CF6]' },
-  { id: 'uiux', label: 'Design UI/UX', icon: PenTool, basePrice: 800, maxPrice: 2000, color: 'from-[#FF1493] to-[#8B5CF6]' },
-  { id: 'sistema', label: 'Sistema Sob Medida', icon: Code, basePrice: 2000, maxPrice: 5000, color: 'from-[#8B5CF6] to-[#00BFFF]' },
-  { id: 'seo', label: 'Otimização & SEO', icon: Zap, basePrice: 300, maxPrice: 800, color: 'from-[#FF8C00] to-[#FF1493]' },
+  { id: 'landing', label: 'Landing Page', icon: Monitor, basePrice: 497.90, maxPrice: 1197, color: 'from-[#00BFFF] to-[#8B5CF6]' },
+  { id: 'uiux', label: 'Design UI/UX', icon: PenTool, basePrice: 799.90, maxPrice: 1997, color: 'from-[#FF1493] to-[#8B5CF6]' },
+  { id: 'sistema', label: 'Sistema Sob Medida', icon: Code, basePrice: 1997, maxPrice: 4997, color: 'from-[#8B5CF6] to-[#00BFFF]' },
+  { id: 'seo', label: 'Otimização & SEO', icon: Zap, basePrice: 297.90, maxPrice: 797, color: 'from-[#FF8C00] to-[#FF1493]' },
 ];
 
 const extras = [
